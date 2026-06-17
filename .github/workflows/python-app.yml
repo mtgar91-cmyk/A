@@ -1,0 +1,33 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: Run Telegram Bot
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch: # يتيح لك تشغيل البوت يدوياً من واجهة GitHub
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: Start Bot
+      env:
+        TOKEN: ${{ secrets.TOKEN }} # يجب وضع التوكن في إعدادات الـ Secrets
+      run: |
+        python main.py
